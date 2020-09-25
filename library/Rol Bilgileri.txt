@@ -1,0 +1,43 @@
+Kütüphane otomayonunu geliştirirken rol tabanlı bir geliştirme yaptım.
+
+Roller: Admin, Görevli ve Kullanıcı
+
+Admin: 
+
+Kişiler ve Kitaplar için ekleme,silme,güncelleme,listeleme işlemlerini yapabilir.
+
+Veriler önemli olduğu için silme işlemlerinde gerçekten silinmez.Durumları false olarak tutulur işlemlerde kullanılamazlar.
+
+Admin yeni bir kullanıcı eklediğinde kullanıcının şifresi otomatik olarak mail adresi olur. 
+
+Kişilere rollerini atar ve hesaplarını kitleyebilir.
+
+Kitap ödünç verme, geri iade etme işlemlerini yapabilir.
+
+Şifresini değiştirebilir.
+
+Görevli: 
+
+Kitaplar için ekleme,silme,güncelleme,listeleme işlemlerini yapabilir.
+
+Kitap ödünç verme, geri iade etme işlemlerini yapabilir.
+
+Şifresini değiştirebilir.
+
+Kullanıcı:
+
+Sadece kitap listeleme ve kitap ayırtma işlemlerini yapabilir.
+
+Şifresini değiştirebilir.
+
+
+
+
+
+
+
+
+
+
+
+

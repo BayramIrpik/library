@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Kütüphane</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+header {
+  background-color: #041A27;
+  padding: 30px;
+  text-align: center;
+  font-size: 25px;
+  color: blue;
+}
+
+
+nav {
+  float: left;
+  width: 30%;
+  height: 300px; 
+  background: #04273C;
+  padding: 20px;
+}
+
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 70%;
+  background-color: #128ACF;
+  height: 300px;
+}
+
+
+section:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.button {
+  background-color: #128ACF; 
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 50%;
+}
+</style>
+</head>
+<body>
+<header>
+  Kütüphanemize Hoş Geldiniz...
+</header>
+<section>
+  <nav>
+    <ul>
+      <li sec:authorize="hasAnyAuthority('ADMIN')"><button class="button"><a href="kisi">Kişi İşlemleri</a></button></li>
+      <li sec:authorize="hasAnyAuthority('ADMIN', 'GOREVLI')"><button class="button"><a href="kitap">Kitap İşlemleri</a></button></li>
+      <li sec:authorize="hasAnyAuthority('ADMIN', 'GOREVLI','KULLANICI')"><button class="button"><a href="odunc">Ödünç Alma İşlemi</a></button></li>
+      <li sec:authorize="hasAnyAuthority('ADMIN', 'GOREVLI')"><button class="button"><a href="kitapAlVer">Ödünç Verme İşlemleri</a></button></li>
+      <li sec:authorize="hasAnyAuthority('ADMIN', 'GOREVLI','KULLANICI')"><button class="button"><a href="sifre/0">Parola Değiştir</a></button></li>
+      <li><button class="button"><a th:href="@{/logout}">Çıkış</a></button></li>
+    </ul>
+  </nav>
+  
+  <article>
+  <p style="color:blue;font-size:25px;text-align: center;">Kitapları seviyor musunuz öyleyse hayatınız boyunca mutlu olacaksınız demektir. - Jules Chore</p> 
+  </article>
+</section>
+
+	
+</body>
+</html>

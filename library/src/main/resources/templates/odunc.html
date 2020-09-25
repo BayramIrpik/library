@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+	box-sizing: border-box
+}
+
+
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: Arial;
+}
+
+
+.tablink {
+	background-color: #555;
+	color: black;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	font-size: 17px;
+	width: 100%;
+}
+
+.tablink:hover {
+	background-color: #777;
+}
+
+
+.tabcontent {
+	color: black;
+	display: none;
+	padding: 100px 20px;
+	height: 100%;
+}
+
+
+#Rezervasyon {
+	background-color: DodgerBlue;
+}
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.button {
+  background-color: green; 
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 5%;
+}
+</style>
+</head>
+<body>
+
+	<button class="tablink" onclick="openPage('Rezervasyon', this, 'green')" id="defaultOpen">Kitap Rezervasyon </button>
+	
+	
+
+	<div id="Rezervasyon" class="tabcontent">
+	<button class="button" style="float: right;"><a th:href="@{'/'}">Geri</a></button>
+		
+	<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search" title="Type in a name">
+		<table id="myTable" border="1" cellpadding="10">
+			<thead>
+				<tr class="header">
+					<th >Kitap Adı <input type="radio"  onClick="choose('0')" name="search"  checked="checked"></th>
+					<th >Kitap Alt Adı </th>
+					<th >Kitap Seri Adı </th>
+					<th >Yazar Adı <input type="radio" onClick="choose('3')" name="search" ></th>
+					<th >Yazar Açıklama </th>
+					<th >Yayınevi Adı <input type="radio" onClick="choose('5')" name="search" ></th>
+					<th >Yayınevi Açıklama </th>
+					<th >ISBN <input type="radio" onClick="choose('7')" name="search" ></th>
+					<th >Durum </th>
+					<th style="width:10%;">Rezerve Durum </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="kitap : ${listkitap}">
+					<td th:text="${kitap.kitapAdi}">Kitap Adı</td>
+					<td th:text="${kitap.kitapAltAdi}">Kitap Alt Adı</td>
+					<td th:text="${kitap.kitapSeriAdi}">Kitap Seri Adı</td>
+					<td th:text="${kitap.yazarAdi}">Yazar Adı</td>
+					<td th:text="${kitap.yazarAciklama}">Yazar Açıklama</td>
+					<td th:text="${kitap.yayineviAdi}">Yayınevi Adı</td>
+					<td th:text="${kitap.yayinEviAciklama}">Yayınevi Açıklama</td>
+					<td th:text="${kitap.isbn}">ISBN</td>
+					
+					<td th:switch="${kitap.oduncVerilme} or ${kitap.rezerve}">
+						<p th:case="true">
+							<p th:if="${kitap.oduncVerilme} and !${kitap.rezerve}" style="background-color:red;">Alınmış</p>
+						    <p th:if="!${kitap.oduncVerilme} and ${kitap.rezerve}" style="background-color:yellow;">Alınacak</p>
+						   
+						</p>
+						
+						<p th:case="false" style="background-color:green;">Alınabilir</p>
+					</td>
+					
+					<td th:switch="${kitap.rezerve}">
+						<p th:case="true">
+							<p th:if="${kitap.getKullanici().getId()} != ${kullaniciId}  and ${kitap.getKullanici().getId()} !='2'">Rezerve Edilmiş</p>
+						    <p th:if="${kitap.getKullanici().getId()} == ${kullaniciId}"><a th:href="@{'/rezervasyonIptal/' + ${kitap.id}}">Rezerve İptal Et</a></p>
+						</p>
+						
+
+						<p th:case="false">
+						<p th:if="!${kitap.oduncVerilme} and !${kitap.rezerve} "><a th:href="@{'/rezervasyon/' + ${kitap.id}}">Rezerve Et</a></p>
+						</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+	<script>
+	
+		function openPage(pageName, elmnt, color) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablink");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].style.backgroundColor = "";
+			}
+			document.getElementById(pageName).style.display = "block";
+			elmnt.style.backgroundColor = color;
+		}
+
+		
+		document.getElementById("defaultOpen").click();
+	   var	searchCondition=0;
+	  function choose(choice){
+		  searchCondition = choice;
+		  document.getElementById('myInput').value = '';
+		}
+	
+		function myFunction() {
+			  var input, filter, table, tr, td, i, txtValue;
+			  input = document.getElementById("myInput");
+			  filter = input.value.toUpperCase();
+			  table = document.getElementById("myTable");
+			  tr = table.getElementsByTagName("tr");
+			  for (i = 0; i < tr.length; i++) {
+			    td = tr[i].getElementsByTagName("td")[searchCondition];
+			    if (td) {
+			      txtValue = td.textContent || td.innerText;
+			      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			        tr[i].style.display = "";
+			      } else {
+			        tr[i].style.display = "none";
+			      }
+			    }       
+			  }
+			}
+		
+	
+	</script>
+
+</body>
+</html>

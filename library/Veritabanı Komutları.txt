@@ -1,0 +1,10 @@
+INSERT INTO kutuphane.rol (role_id, rol_adi) VALUES ('1','ADMIN');
+INSERT INTO kutuphane.rol (role_id, rol_adi) VALUES ('2','GOREVLI');
+INSERT INTO kutuphane.rol (role_id, rol_adi) VALUES ('3','KULLANICI');
+
+INSERT INTO kutuphane.kullanici (durum, eposta, izin, kullanici_adi, kullanici_soyadi, sifre) 
+VALUES (1, 'admin@gmail.com', 1, 'admin', 'admin', '$2b$10$QDiO6ixgzSVC01UVZfXhpehmvokUoBi2I5Zjz0qxuVUh17W4NcBJC');	
+
+INSERT INTO kutuphane.kullanici (kullanici_id,durum, izin) VALUES (0,0,0);	
+
+INSERT INTO kutuphane.kullanici_roller (kullanici_id,rol_id) VALUES (1,1);

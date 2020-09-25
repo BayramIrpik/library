@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+	box-sizing: border-box
+}
+
+
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: Arial;
+}
+
+
+.tablink {
+	background-color: #555;
+	color: black;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	font-size: 17px;
+	width: 50%;
+}
+
+.tablink:hover {
+	background-color: #777;
+}
+
+
+.tabcontent {
+	color: black;
+	display: none;
+	padding: 100px 20px;
+	height: 100%;
+}
+
+
+#YeniKisiEkle,#KisiIslemleri {
+	background-color: DodgerBlue;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.button {
+  background-color: green; 
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 5%;
+}
+</style>
+</head>
+<body>
+	<button class="tablink" onclick="openPage('KisiIslemleri', this, 'green')" id="defaultOpen">Home</button>
+	<button class="tablink" onclick="openPage('YeniKisiEkle', this, 'green')">Yeni Kişi Ekle</button>
+	
+
+	<div id="KisiIslemleri" class="tabcontent">
+	<button class="button" style="float: right;"><a th:href="@{'/'}">Geri</a></button>
+		
+	<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search" title="Type in a name">
+		<table id="myTable" border="1" cellpadding="10">
+			<thead>
+				<tr class="header">
+					<th style="width:9%;">Kişi ID <input type="radio"  onClick="choose('0')" name="search" ></th>
+					<th style="width:12%;">Ad <input type="radio"  onClick="choose('1')" name="search"  checked="checked"></th>
+					<th style="width:12%;">Soyad <input type="radio" onClick="choose('2')" name="search" ></th>
+					<th style="width:20%;">E posta <input type="radio" onClick="choose('3')" name="search" ></th>
+					<th style="width:10%;">Roller <input type="radio" onClick="choose('4')" name="search" ></th>
+					<th style="width:10%;">Hesap Durumu <input type="radio" onClick="choose('5')" name="search" ></th>
+					<th style="width:25%;">İşlemler</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="kullanici : ${listKullanicilar}">
+					<td th:text="${kullanici.id}">Kişi ID</td>
+					<td th:text="${kullanici.kullaniciAdi}">Ad</td>
+					<td th:text="${kullanici.kullaniciSoyadi}">Soyad</td>
+					<td th:text="${kullanici.eposta}">E posta</td>
+					<td th:text="${kullanici.getRolAdlari(kullanici.roller)}">E posta</td>
+         
+					<td th:switch="${kullanici.izin}">
+						<p th:case="true">Normal</p>
+						<p th:case="false">Kilitli</p>
+					</td>
+
+
+
+					<td>
+						<a th:href="@{'/kullaniciDuzenle/' + ${kullanici.id}}">Düzenle</a>
+							&nbsp;&nbsp;&nbsp;&nbsp; 
+						<a  th:href="@{'/deleteKullanici/' + ${kullanici.id}}">Sil</a>
+						&nbsp;&nbsp;&nbsp;&nbsp; 
+						<a th:switch="${kullanici.izin}">
+						<p style="display:inline" th:case="true"><a  th:href="@{'/hesabiKitle/' + ${kullanici.id}}">Hesabı Kilitle</a></p>
+						<p style="display:inline" th:case="false"><a th:href="@{'/hesabiAc/' + ${kullanici.id}}">Hesabı Aç</a></p>
+					   </a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div id="YeniKisiEkle" class="tabcontent">
+	<button class="button" style="float: right;"><a th:href="@{'/'}">Geri</a></button>
+		<form action="#" th:action="@{/yeniKullanici}"
+			th:object="${kullanici}" method="post">
+			<table border="0" cellpadding="10">
+				<tr>
+					<td>Ad:</td>
+					<td><input type="text" th:field="*{kullaniciAdi}" /></td>
+				</tr>
+				<tr>
+					<td>Soyad:</td>
+					<td><input type="text" th:field="*{kullaniciSoyadi}" /></td>
+				</tr>
+				<tr>
+					<td>E posta:</td>
+					<td><input type="text" th:field="*{eposta}" /></td>
+				</tr>
+				<tr>
+					<td>Rol:</td>
+					<td><select th:field="*{roller}" multiple="multiple">
+							<option th:each="rol: ${roller}" th:value="${rol.id}"
+								th:text="${rol.rolAdi}">
+					</select></td>
+
+				</tr>
+				<tr>
+					<td colspan="2"><button type="submit">Ekle</button></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	
+
+	<script>
+	
+		function openPage(pageName, elmnt, color) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablink");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].style.backgroundColor = "";
+			}
+			document.getElementById(pageName).style.display = "block";
+			elmnt.style.backgroundColor = color;
+		}
+
+		
+		document.getElementById("defaultOpen").click();
+	   var	searchCondition=1;
+	  function choose(choice){
+		  searchCondition = choice;
+		  document.getElementById('myInput').value = '';
+		}
+	
+		function myFunction() {
+			  var input, filter, table, tr, td, i, txtValue;
+			  input = document.getElementById("myInput");
+			  filter = input.value.toUpperCase();
+			  table = document.getElementById("myTable");
+			  tr = table.getElementsByTagName("tr");
+			  for (i = 0; i < tr.length; i++) {
+			    td = tr[i].getElementsByTagName("td")[searchCondition];
+			    if (td) {
+			      txtValue = td.textContent || td.innerText;
+			      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			        tr[i].style.display = "";
+			      } else {
+			        tr[i].style.display = "none";
+			      }
+			    }       
+			  }
+			}
+	</script>
+
+</body>
+</html>
